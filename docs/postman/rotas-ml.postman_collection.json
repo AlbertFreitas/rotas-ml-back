@@ -1,0 +1,157 @@
+{
+  "info": {
+    "name": "Rotas ML API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3333"
+    },
+    {
+      "key": "adminToken",
+      "value": ""
+    },
+    {
+      "key": "userToken",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/health"
+      }
+    },
+    {
+      "name": "Admin Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"admin@rotaliquida.com\",\n  \"password\": \"123456\"\n}"
+        },
+        "url": "{{baseUrl}}/auth/admin/login"
+      }
+    },
+    {
+      "name": "Firebase Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"idToken\": \"COLE_AQUI_O_IDTOKEN_DO_FIREBASE\"\n}"
+        },
+        "url": "{{baseUrl}}/auth/firebase/login"
+      }
+    },
+    {
+      "name": "Get My Vehicle",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{userToken}}" }
+        ],
+        "url": "{{baseUrl}}/vehicles/me"
+      }
+    },
+    {
+      "name": "Upsert My Vehicle",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{userToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Corsa SW5\",\n  \"consumptionKmL\": 11,\n  \"fuelPrice\": 6.28\n}"
+        },
+        "url": "{{baseUrl}}/vehicles/me"
+      }
+    },
+    {
+      "name": "Create Route",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{userToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"routeName\": \"Rota Zona Sul\",\n  \"routeDate\": \"2026-05-24\",\n  \"status\": \"CONCLUIDA\",\n  \"grossAmount\": 230,\n  \"km\": 85,\n  \"consumptionKmL\": 10,\n  \"fuelPrice\": 5.8,\n  \"notes\": \"Opcional\"\n}"
+        },
+        "url": "{{baseUrl}}/routes"
+      }
+    },
+    {
+      "name": "List Routes",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{userToken}}" }
+        ],
+        "url": "{{baseUrl}}/routes?month=3&year=2025"
+      }
+    },
+    {
+      "name": "Dashboard Summary",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{userToken}}" }
+        ],
+        "url": "{{baseUrl}}/dashboard/summary?month=3&year=2025"
+      }
+    },
+    {
+      "name": "Dashboard Charts",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{userToken}}" }
+        ],
+        "url": "{{baseUrl}}/dashboard/charts?month=3&year=2025"
+      }
+    },
+    {
+      "name": "Dashboard Monthly Comparison",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{userToken}}" }
+        ],
+        "url": "{{baseUrl}}/dashboard/monthly-comparison"
+      }
+    },
+    {
+      "name": "Dashboard Analysis",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{userToken}}" }
+        ],
+        "url": "{{baseUrl}}/dashboard/analysis?month=3&year=2025"
+      }
+    },
+    {
+      "name": "Dashboard Statement",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{userToken}}" }
+        ],
+        "url": "{{baseUrl}}/dashboard/statement"
+      }
+    }
+  ]
+}
