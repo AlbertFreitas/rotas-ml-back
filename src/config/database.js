@@ -13,6 +13,14 @@ module.exports = {
     timestamps: true,
     freezeTableName: true,
   },
-  dialectOptions: {},
+  dialectOptions:
+    env.nodeEnv === 'production'
+      ? {
+          ssl: {
+            require: true,
+            rejectUnauthorized: false,
+          },
+        }
+      : {},
   logging: false,
 };
