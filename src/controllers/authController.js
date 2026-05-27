@@ -94,13 +94,15 @@ const me = async (req, res) => {
 };
 
 const demoLogin = async (_req, res) => {
-  const user = await User.findOne({
+  const [user] = await User.findOrCreate({
     where: { firebase_uid: 'demo-firebase-uid-001' },
+    defaults: {
+      firebase_uid: 'demo-firebase-uid-001',
+      name: 'Usuário Demonstração',
+      email: 'demo@rotaliquida.app',
+      role: 'user',
+    },
   });
-
-  if (!user) {
-    throw new AppError('Usuário demo não encontrado. Rode o seed novamente.', 404);
-  }
 
   const token = signToken({
     sub: user.id,
