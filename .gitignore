@@ -1,11 +1,44 @@
+# Dependencies
 node_modules/
+
+# Env files and secrets
 .env
 .env.*
 !.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*firebase-adminsdk*.json
+service-account*.json
+
+# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-.DS_Store
-coverage/
+logs/
+*.log
+
+# Build and coverage
 dist/
+coverage/
+.nyc_output/
+
+# Runtime and temp
+.tmp/
+tmp/
+*.tmp
+*.pid
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*.code-workspace
+
+# Sequelize metadata (if generated locally)
+sequelize-meta.json
+
+# Docker overrides local
+.docker/

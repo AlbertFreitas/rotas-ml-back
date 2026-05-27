@@ -1,58 +1,55 @@
 # Rotas ML Backend
 
-API backend para gestão de rotas de entregadores, usando:
+API backend para gestão financeira de rotas de entregadores.
+
+## Stack
 - Node.js + Express
 - Sequelize + PostgreSQL
-- Docker (Postgres local)
-- Yup (validação)
-- bcrypt (senha de admin)
-- JWT (autenticação)
-- Firebase Admin (login usuário)
-- CORS
-- UUID
+- Firebase Admin
+- JWT + bcrypt
+- Yup
+- Docker (ambiente local)
 
-## 1) Subir banco com Docker
+## Documentação técnica por módulos
+A documentação interna está organizada em módulos/pastas:
+- [Documentação Geral](/Users/albertdumontsilvafreitas/Documents/ROTAS_ML/backend/docs/README.md)
+- [Módulo app-server](/Users/albertdumontsilvafreitas/Documents/ROTAS_ML/backend/docs/modules/app-server/README.md)
+- [Módulo config](/Users/albertdumontsilvafreitas/Documents/ROTAS_ML/backend/docs/modules/config/README.md)
+- [Módulo controllers](/Users/albertdumontsilvafreitas/Documents/ROTAS_ML/backend/docs/modules/controllers/README.md)
+- [Módulo database](/Users/albertdumontsilvafreitas/Documents/ROTAS_ML/backend/docs/modules/database/README.md)
+- [Módulo middlewares](/Users/albertdumontsilvafreitas/Documents/ROTAS_ML/backend/docs/modules/middlewares/README.md)
+- [Módulo models](/Users/albertdumontsilvafreitas/Documents/ROTAS_ML/backend/docs/modules/models/README.md)
+- [Módulo routes](/Users/albertdumontsilvafreitas/Documents/ROTAS_ML/backend/docs/modules/routes/README.md)
+- [Módulo services](/Users/albertdumontsilvafreitas/Documents/ROTAS_ML/backend/docs/modules/services/README.md)
+- [Módulo utils](/Users/albertdumontsilvafreitas/Documents/ROTAS_ML/backend/docs/modules/utils/README.md)
+- [Módulo validators](/Users/albertdumontsilvafreitas/Documents/ROTAS_ML/backend/docs/modules/validators/README.md)
 
+## Subir localmente
+
+### 1) Banco local com Docker
 ```bash
-cd backend
 docker compose up -d
 ```
 
-## 2) Configurar ambiente
-
+### 2) Ambiente
 ```bash
 cp .env.example .env
 ```
 
-Preencha o `.env` (principalmente `JWT_SECRET` e `FIREBASE_SERVICE_ACCOUNT_JSON`).
-
-## 3) Rodar migrations e seed
-
+### 3) Banco
 ```bash
 npm run db:migrate
 npm run db:seed
 ```
 
-## 4) Rodar API
-
+### 4) API
 ```bash
 npm run dev
 ```
 
-A API sobe em `http://localhost:3333`.
-
-## Credenciais seed (admin)
-- Email: `admin@rotaliquida.com`
-- Senha: `123456`
-
-## Usuário demo seed
-- `firebase_uid`: `demo-firebase-uid-001`
-- email: `demo@rotaliquida.com`
-
-> Para login real de usuário é necessário enviar um `idToken` válido do Firebase em `POST /auth/firebase/login`.
+API: `http://localhost:3333`
 
 ## Endpoints principais
-
 ### Health
 - `GET /health`
 
@@ -62,31 +59,28 @@ A API sobe em `http://localhost:3333`.
 - `POST /auth/demo/login`
 - `GET /auth/me`
 
-### Veículo (usuário logado)
+### Veículo
 - `GET /vehicles/me`
 - `PUT /vehicles/me`
 
-### Rotas (usuário logado)
+### Rotas
 - `POST /routes`
 - `GET /routes?month=3&year=2025&status=CONCLUIDA`
 - `DELETE /routes/:id`
 
-### Dashboard (usuário logado)
+### Dashboard
 - `GET /dashboard/summary?month=3&year=2025`
 - `GET /dashboard/charts?month=3&year=2025`
 - `GET /dashboard/monthly-comparison`
 - `GET /dashboard/analysis?month=3&year=2025`
 - `GET /dashboard/statement`
 
-## Beekeeper Studio (conexão)
-Use estes dados:
-- Host: `127.0.0.1`
-- Port: `5432`
-- User: `postgres`
-- Password: `postgres`
-- Database: `rotas_ml`
+## Publicação segura (repositório público)
+Antes de publicar, confirme:
+1. `.env` e qualquer arquivo de segredo não estão versionados.
+2. Não há JSON de chave Firebase no projeto.
+3. Senhas/segredos antigos foram rotacionados (Neon/Firebase/JWT).
+4. Variáveis reais estão apenas na plataforma de deploy (Render/Vercel).
 
-## Teste rápido no Postman
-1. `POST /auth/admin/login` para validar admin.
-2. `POST /auth/firebase/login` com token Firebase real para obter JWT de usuário.
-3. Com token de usuário (`Bearer`), testar `/vehicles/me`, `/routes`, `/dashboard/*`.
+## Postman
+Coleção: [rotas-ml.postman_collection.json](/Users/albertdumontsilvafreitas/Documents/ROTAS_ML/backend/docs/postman/rotas-ml.postman_collection.json)

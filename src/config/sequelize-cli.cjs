@@ -12,6 +12,15 @@ const shared = {
     timestamps: true,
     freezeTableName: true,
   },
+  dialectOptions:
+    process.env.NODE_ENV === 'production' || String(process.env.DB_HOST || '').includes('neon.tech')
+      ? {
+          ssl: {
+            require: true,
+            rejectUnauthorized: false,
+          },
+        }
+      : {},
   logging: false,
 };
 
