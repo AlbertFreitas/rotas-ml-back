@@ -12,11 +12,10 @@ const adminLogin = async (req, res) => {
     throw new AppError('Credenciais inválidas.', 401);
   }
 
+  // O token deve conter apenas dados mínimos do usuário. Nunca incluir senha ou hash.
   const token = signToken({
     sub: admin.id,
     role: 'admin',
-    name: admin.name,
-    email: admin.email,
   });
 
   return res.json({
@@ -50,12 +49,10 @@ const firebaseLogin = async (req, res) => {
     await user.save();
   }
 
+  // O token deve conter apenas dados mínimos do usuário. Nunca incluir senha ou hash.
   const token = signToken({
     sub: user.id,
     role: user.role,
-    firebaseUid: user.firebase_uid,
-    name: user.name,
-    email: user.email,
   });
 
   return res.json({
@@ -72,6 +69,10 @@ const firebaseLogin = async (req, res) => {
 const me = async (req, res) => {
   if (req.auth.role === 'admin') {
     const admin = await Admin.findByPk(req.auth.sub);
+    if (!admin) {
+      throw new AppError('Usuário não encontrado.', 404);
+    }
+
     return res.json({
       id: admin.id,
       name: admin.name,
@@ -99,17 +100,15 @@ const demoLogin = async (_req, res) => {
     defaults: {
       firebase_uid: 'demo-firebase-uid-001',
       name: 'Usuário Demonstração',
-      email: 'demo@rotaliquida.app',
+      email: 'demo@sobrarota.app',
       role: 'user',
     },
   });
 
+  // O token deve conter apenas dados mínimos do usuário. Nunca incluir senha ou hash.
   const token = signToken({
     sub: user.id,
     role: user.role,
-    firebaseUid: user.firebase_uid,
-    name: user.name,
-    email: user.email,
   });
 
   return res.json({

@@ -24,8 +24,15 @@ const shared = {
   logging: false,
 };
 
+const withDatabaseUrl = process.env.DATABASE_URL
+  ? {
+      ...shared,
+      use_env_variable: 'DATABASE_URL',
+    }
+  : shared;
+
 module.exports = {
-  development: shared,
-  test: shared,
-  production: shared,
+  development: withDatabaseUrl,
+  test: withDatabaseUrl,
+  production: withDatabaseUrl,
 };

@@ -15,6 +15,10 @@ const ensureAuth = (req, _res, next) => {
     req.auth = decoded;
     return next();
   } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      return next(new AppError('Sessão expirada. Faça login novamente.', 401));
+    }
+
     return next(new AppError('Token inválido.', 401));
   }
 };
