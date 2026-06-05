@@ -18,7 +18,7 @@ const createRouteSchema = yup.object({
   consumptionKmL: numberField('Consumo').positive('Consumo deve ser maior que zero.').notRequired(),
   fuelPrice: numberField('Valor da gasolina').positive('Valor da gasolina deve ser maior que zero.').notRequired(),
   vehicleId: yup.string().uuid('vehicleId inválido.').notRequired(),
-  notes: yup.string().max(1000, 'Observações excedem 1000 caracteres.').notRequired(),
+  notes: yup.string().max(500, 'Observação muito longa. Use no máximo 500 caracteres.').notRequired(),
 });
 
 const listRoutesQuerySchema = yup.object({

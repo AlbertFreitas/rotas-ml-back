@@ -12,11 +12,23 @@ const app = express();
 
 app.disable('x-powered-by');
 
+const isLocalDevOrigin = (origin) => {
+  if (env.isProduction || !origin) return false;
+
+  try {
+    const parsed = new URL(origin);
+    const localHosts = new Set(['localhost', '127.0.0.1']);
+    return ['http:', 'https:'].includes(parsed.protocol) && localHosts.has(parsed.hostname);
+  } catch (_error) {
+    return false;
+  }
+};
+
 // Em produção, apenas domínios autorizados devem acessar a API.
 const corsOptions = {
   origin(origin, callback) {
     if (!origin) return callback(null, true);
-    if (env.corsOrigins.includes(origin)) return callback(null, true);
+    if (env.corsOrigins.includes(origin) || isLocalDevOrigin(origin)) return callback(null, true);
     return callback(new Error('Origem não permitida pelo CORS.'));
   },
   credentials: true,

@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.1.2
+
+### Adicionado
+- Alinhamento do backend para suportar a visualização detalhada das rotas com observações no frontend.
+
+### Melhorado
+- Validação do campo opcional `notes` com limite de 500 caracteres.
+- Versionamento e documentação da entrega 1.1.2.
+
 ## v1.1.1
 
 ### Segurança
