@@ -2,13 +2,14 @@ const { round2, toNumber } = require('../utils/finance');
 
 const CANCELED_PERCENT = 0.4;
 
-const calculateRouteMetrics = ({ status, grossAmount, km, consumptionKmL, fuelPrice }) => {
+const calculateRouteFinancials = ({ status, grossAmount, km, consumptionKmL, fuelPrice }) => {
   const normalizedStatus = String(status || '').toUpperCase();
   const gross = toNumber(grossAmount);
   const totalKm = toNumber(km);
   const consumption = toNumber(consumptionKmL);
   const price = toNumber(fuelPrice);
 
+  // Rotas canceladas consideram apenas 40% do valor bruto informado.
   const consideredAmount = normalizedStatus === 'CANCELADA' ? gross * CANCELED_PERCENT : gross;
   const liters = consumption > 0 ? totalKm / consumption : 0;
   const fuelCost = liters * price;
@@ -27,5 +28,7 @@ const calculateRouteMetrics = ({ status, grossAmount, km, consumptionKmL, fuelPr
 };
 
 module.exports = {
-  calculateRouteMetrics,
+  // Mantido como alias para preservar compatibilidade com imports legados.
+  calculateRouteMetrics: calculateRouteFinancials,
+  calculateRouteFinancials,
 };

@@ -2,13 +2,14 @@ const { Op } = require('sequelize');
 const dayjs = require('dayjs');
 
 const DeliveryRoute = require('../models/DeliveryRoute');
-const { calculateRouteMetrics } = require('../services/routeFinanceService');
+const { calculateRouteFinancials } = require('../services/routeFinanceService');
 const AppError = require('../utils/AppError');
 const { getVehicleForRoute } = require('./vehicleController');
 
 const normalizeStatus = (status) => String(status || '').toUpperCase();
 
 const buildRouteWhere = (userId, query) => {
+  // Garante que o usuário só acesse registros pertencentes à própria conta.
   const where = { user_id: userId };
 
   if (query.status) {
@@ -40,7 +41,9 @@ const createRoute = async (req, res) => {
     throw new AppError('Consumo e valor do litro são obrigatórios. Configure o veículo padrão.', 422);
   }
 
-  const metrics = calculateRouteMetrics({
+  // O frontend exibe apenas uma prévia dos valores.
+  // Para evitar manipulação, o backend recalcula todos os resultados financeiros antes de salvar.
+  const metrics = calculateRouteFinancials({
     status: normalizedStatus,
     grossAmount,
     km,

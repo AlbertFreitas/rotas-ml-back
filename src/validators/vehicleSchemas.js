@@ -1,7 +1,7 @@
 const { yup, numberField } = require('./common');
 
 const upsertVehicleSchema = yup.object({
-  name: yup.string().required('Nome do carro é obrigatório.'),
+  name: yup.string().trim().min(2).max(80).required('Nome do carro é obrigatório.'),
   consumptionKmL: numberField('Consumo').positive('Consumo deve ser maior que zero.').required(),
   fuelPrice: numberField('Valor da gasolina').positive('Valor da gasolina deve ser maior que zero.').required(),
 });
