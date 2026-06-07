@@ -4,10 +4,15 @@
 
 ### Adicionado
 - Alinhamento do backend para suportar a visualização detalhada das rotas com observações no frontend.
+- Endpoint para consulta de rota por ID.
+- Endpoint para atualização de rotas com recálculo financeiro no servidor.
 
 ### Melhorado
 - Validação do campo opcional `notes` com limite de 500 caracteres.
 - Versionamento e documentação da entrega 1.1.2.
+
+### Corrigido
+- Corrigido fluxo de edição de rota com isolamento por usuário.
 
 ## v1.1.1
 

@@ -8,6 +8,14 @@ const { getVehicleForRoute } = require('./vehicleController');
 
 const normalizeStatus = (status) => String(status || '').toUpperCase();
 
+const findOwnedRoute = (userId, id) =>
+  DeliveryRoute.findOne({
+    where: {
+      id,
+      user_id: userId,
+    },
+  });
+
 const buildRouteWhere = (userId, query) => {
   // Garante que o usuário só acesse registros pertencentes à própria conta.
   const where = { user_id: userId };
@@ -73,6 +81,73 @@ const createRoute = async (req, res) => {
   return res.status(201).json(route);
 };
 
+const getRouteById = async (req, res) => {
+  const route = await findOwnedRoute(req.auth.sub, req.params.id);
+
+  if (!route) {
+    throw new AppError('Rota não encontrada.', 404);
+  }
+
+  return res.json(route);
+};
+
+const updateRoute = async (req, res) => {
+  const route = await findOwnedRoute(req.auth.sub, req.params.id);
+
+  if (!route) {
+    throw new AppError('Rota não encontrada.', 404);
+  }
+
+  const { routeName, routeDate, status, grossAmount, km, consumptionKmL, fuelPrice, vehicleId, notes } = req.body;
+  const normalizedStatus = normalizeStatus(status);
+
+  let vehicle = null;
+
+  if (vehicleId || consumptionKmL == null || fuelPrice == null) {
+    vehicle = await getVehicleForRoute({
+      userId: req.auth.sub,
+      vehicleId: vehicleId || route.vehicle_id || undefined,
+    });
+  }
+
+  const appliedConsumption = consumptionKmL ?? Number(vehicle?.consumption_km_l) ?? Number(route.consumption_km_l);
+  const appliedFuelPrice = fuelPrice ?? Number(vehicle?.fuel_price) ?? Number(route.fuel_price);
+
+  if (!appliedConsumption || !appliedFuelPrice) {
+    throw new AppError('Consumo e valor do litro são obrigatórios. Configure o veículo padrão.', 422);
+  }
+
+  // O frontend pode exibir uma prévia, mas o backend recalcula os valores financeiros
+  // para evitar manipulação de lucro, gasto ou valor considerado.
+  const metrics = calculateRouteFinancials({
+    status: normalizedStatus,
+    grossAmount,
+    km,
+    consumptionKmL: appliedConsumption,
+    fuelPrice: appliedFuelPrice,
+  });
+
+  route.vehicle_id = vehicle?.id || route.vehicle_id || null;
+  route.route_name = routeName;
+  route.route_date = routeDate;
+  route.status = normalizedStatus;
+  route.gross_amount = grossAmount;
+  route.considered_amount = metrics.consideredAmount;
+  route.km = km;
+  route.consumption_km_l = appliedConsumption;
+  route.fuel_price = appliedFuelPrice;
+  route.fuel_liters = metrics.fuelLiters;
+  route.fuel_cost = metrics.fuelCost;
+  route.net_amount = metrics.netAmount;
+  route.profit_per_km = metrics.profitPerKm;
+  route.cost_per_km = metrics.costPerKm;
+  route.notes = notes || null;
+
+  await route.save();
+
+  return res.json(route);
+};
+
 const listRoutes = async (req, res) => {
   const routes = await DeliveryRoute.findAll({
     where: buildRouteWhere(req.auth.sub, req.query),
@@ -86,8 +161,7 @@ const listRoutes = async (req, res) => {
 };
 
 const deleteRoute = async (req, res) => {
-  const { id } = req.params;
-  const route = await DeliveryRoute.findOne({ where: { id, user_id: req.auth.sub } });
+  const route = await findOwnedRoute(req.auth.sub, req.params.id);
 
   if (!route) {
     throw new AppError('Rota não encontrada.', 404);
@@ -100,6 +174,8 @@ const deleteRoute = async (req, res) => {
 
 module.exports = {
   createRoute,
+  getRouteById,
   listRoutes,
+  updateRoute,
   deleteRoute,
 };

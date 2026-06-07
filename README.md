@@ -15,7 +15,7 @@ O backend centraliza autenticação, regras de negócio e cálculos financeiros 
 - Login administrativo
 - Login de usuário com Google/Firebase
 - Modo demonstração
-- Cadastro e listagem de rotas
+- Cadastro, listagem e edição de rotas
 - Cálculo automático de valor considerado, litros, combustível, lucro líquido, lucro/km e custo/km
 - Configuração de veículo padrão
 - Dashboard financeiro (resumo, gráficos, análise, comparativo)
@@ -119,6 +119,7 @@ Boas práticas aplicadas:
 - Rate limit em autenticação
 - Validação com Yup
 - Isolamento por usuário
+- Edição de rota isolada por usuário autenticado
 - Tratamento global de erros sem stack em produção
 - Variáveis sensíveis fora do repositório
 
