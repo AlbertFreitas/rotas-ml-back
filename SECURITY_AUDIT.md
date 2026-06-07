@@ -40,6 +40,7 @@
 - Middleware global de erros ajustado para não expor stack/infra em produção.
 - Validações Yup reforçadas para datas válidas, intervalo de datas e campos numéricos > 0.
 - Cálculo financeiro renomeado para `calculateRouteFinancials` com alias legado e comentários de segurança.
+- Atualização de rotas protegida por autenticação, ownership e recálculo financeiro no backend.
 - Criado `.dockerignore` para evitar envio de arquivos sensíveis e desnecessários no build.
 
 ## Vulnerabilidades encontradas e corrigidas
@@ -57,6 +58,9 @@
 
 5. Falta de validação robusta em filtros de data/período.
 - Correção: validações de paridade e ordem de datas.
+
+6. Edição de rota sem garantia explícita de ownership e recálculo no servidor.
+- Correção: `PUT /routes/:id` com busca por `user_id` e recomputação integral dos campos financeiros.
 
 ## Pontos de atenção futuros
 - Adicionar testes automatizados de integração para autorização por usuário.

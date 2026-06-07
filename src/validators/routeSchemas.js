@@ -45,7 +45,10 @@ const listRoutesQuerySchema = yup.object({
     return value.endDate >= value.startDate;
   });
 
+const updateRouteSchema = createRouteSchema;
+
 module.exports = {
   createRouteSchema,
   listRoutesQuerySchema,
+  updateRouteSchema,
 };
